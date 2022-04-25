@@ -1,0 +1,21 @@
+$curDir = Get-Location
+$mergedCSVPath = $curDir.Path+"\MergedDov.csv"
+$getFirstLine = $true
+$title_line = '"id";"isubmittertype";"csubmittertype";"lsubmitteridp";"lsubmitterorganization";"isubmitter";"iidp";"nnumber";"dcreated";"dsubmitted";"dbooked";"istate";"cstate";"dstate";"ireceiver";"creceiver";"iparentrelation";"cparentrelation";"lidpissubmitter";"icancellationreason";"ccancellationreason";"dcancellation";"dlastobuident";"dlastobulock";"capplicationtext";"ceibdvponumber";"deibdvpobook";"csubmittersurname";"csubmittername";"csubmitterpatronymic";"dsubmitterborn";"isubmittercitizenship";"csubmittercitizenship";"isubmitterdocumenttype";"csubmitterdocumenttype";"csubmitterdocument";"cnsubmitterdocument";"csubmitterphone";"csubmitteremail";"isubmitterperson";"isubmitterorganization";"csubmitterorganization";"isubmitterorganizationaddress";"csubmitterorganizationaddress";"isubmittermailaddress";"csubmittermailaddress";"lsubmittermailaddrequalsreal";"cidpsurname";"cidpname";"cidppatronymic";"didpborn";"iidpcitizenship";"cidpcitizenship";"iidpdocumenttype";"cidpdocumenttype";"cidpdocument";"cnidpdocument";"cidpdocumentissuer";"didpdocumentissued";"didpdocumentvalid";"cidpsri";"lidpsrirefusal";"iidpgender";"cidpgender";"cidpbornplace";"lispropertyoutsideexists";"lisincomeexceeds";"iidpperson";"iidpsocialcategory";"cidpsocialcategory";"ilastregaccommodationbefore";"clastregaccommodationbefore";"ilastregregion";"ilastregcity";"ilastregdistrict";"ilastregstreet";"ilastregpost";"clastreghousing";"clastregbuilding";"clastregflat";"ilastrealaccommodationbefore";"clastrealaccommodationbefore";"ilastrealregion";"ilastrealcity";"ilastrealdistrict";"ilastrealstreet";"ilastrealpost";"clastrealhousing";"clastrealbuilding";"clastrealflat";"llastrealequalsregbefore";"ddisplacement";"irealaccommodationaddress";"crealaccommodationaddress";"irealregion";"irealcity";"irealdistrict";"irealstreet";"irealpost";"crealhousing";"crealbuilding";"crealflat";"daccommodationstart";"iidpdisabilityreason";"cidpdisabilityreason";"iidpdisabilitygroup";"cidpdisabilitygroup";"didpdisabilityfrom";"didpdisabilitytill";"cidprehabneeds";"cidpresortneeds";"cidpworkcurrent";"didpworkstart";"cidpeducation";"cidpprofession";"cidpworkspecilty";"cidpworklast";"nparentnumber";"dparentsubmitted";"dparentbooked";"iparentstate";"iparentsubmittertype";"iparentsubmitter";"lparentsubmitterorganization";"lparentsubmitteridp";"iparentsubmitterperson";"iparentsubmitterorganization";"iparentsubmitterorgaddress";"cparentstate";"cparentsubmittersurname";"cparentsubmittername";"cparentsubmitterpatronymic";"cparentsubmittertype";"dparentsubmitterborn";"iparentsubmittercitizenship";"cparentsubmittercitizenship";"iparentsubmitterdocumenttype";"cparentsubmitterdocumenttype";"cparentsubmitterdocument";"cnparentsubmitterdocument";"cparentsubmitterphone";"cparentsubmitteremail";"cparentsubmittermail";"cparentsubmitterorganization";"cparentsubmitterorgaddress";"clastuser";"iparent";"cparenttext";"afamily";"nfamilycount";"adisplacecause";"amaterialneeds";"asocialneeds";"alastregaccommodationbefore";"alastrealaccommodationbefore";"arealaccommodationaddress";"mode";"capplicationkeytext";"capplicationtitletext";"capplicationdetailestext";"capplicationcheckstext";"lshowcreatenew";"lshowparenttextpencil";"lshowparenttext";"lshowapplicationkey";"lshowapplicationtitle";"lshowapplicationtextpencil";"lshowapplicationtext";"lshowprintparent";"lshowprintapplication";"lshowfamilytable";"lshowfamilyadd";"lshowparentbook";"lshowapplicationdetailes";"lshowapplicationbook";"lshowapplicationcancellation";"lshowapplicationrefuse";"lshowrecover"'
+Add-Content -Encoding "windows-1251" ".\MergedDov.csv" $title_line
+Get-ChildItem ".\dovydky" -Filter "*.csv" | ForEach-Object {
+    $filePath = $_
+    if ($filePath -notlike $mergedCSVPath){
+       Write-Host $filePath
+       $lines = Get-Content -Encoding "windows-1251" $filePath  
+       $linesToWrite = switch($getFirstLine) {
+           $true  {$lines}
+           $false {$lines | Select-Object -Skip 1}
+
+       }
+
+       $getFirstLine = $false
+       Add-Content -Encoding "windows-1251" "MergedDov.csv" $linesToWrite
+       }
+    
+    }
