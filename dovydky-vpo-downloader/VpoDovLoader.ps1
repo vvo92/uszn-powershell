@@ -105,13 +105,14 @@ function DovReqJson {
     $url = -join("http://", $CRYPTOSRVIP, ":96/idp/rest/getview/", $ReqDovID)
     $jsonPath = -join(".\jsons\dovydka_", $ReqDovID, ".json")
     If (Test-Path -Path $jsonPath  ) {
-      Write-Host "File $jsonPath is exist!"
+      #Write-Host "File $jsonPath is exist!"
     } else{
       $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
       $session.Cookies.Add((New-Object System.Net.Cookie("PHPSESSID", $PHPSESSID, "/", $CRYPTOSRVIP)))
       do{
         $req = Invoke-WebRequest -UseBasicParsing -Uri $url `
         -WebSession $session `
+        -ContentType 'application/json' `
         -Headers @{} 
       } until($req.StatusCode -eq "200")
       Set-Content -Path $jsonPath -Value $req.Content
@@ -142,7 +143,7 @@ function DovHandler {
     foreach($jsonFile in (Get-ChildItem -Path $jsonsPath -Filter "IPS_*.json")){
         $jsonsArr += Get-Content -Path $jsonFile.FullName | ConvertFrom-Json
     foreach($elem in $jsonsArr){
-        $elem.id
+        #$elem.id
         DovReqJson -CRYPTOSRVIP $CryptoSrvIP -PHPSESSID $PHPSESSID -ReqDovID $elem.id
     }
 }
@@ -155,8 +156,8 @@ function DovHandler {
 #$USERNAME = "User111021"
 #$USERPASSWORD = "SA921m410f"
 $CRYPTOSRVIP = "127.0.0.1"
-$USERNAME = "User111021"
-$USERPASSWORD = "User111021"
+$USERNAME = ""
+$USERPASSWORD = ""
 #------endOfSettings-----------
 
 DovHandler -CryptoSrvIP $CRYPTOSRVIP -Username $USERNAME -Userpwd $USERPASSWORD
